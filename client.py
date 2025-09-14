@@ -1,6 +1,6 @@
 #python3
 
-import sys, os, socket, cmd, getpass
+import sys, os, socket, cmd, getpass, json
 from Crypto.Hash import SHA256
 from siftdnl import SiFT_DNL, SiFT_DNL_Error
 from siftmtp import SiFT_MTP, SiFT_MTP_Error
@@ -9,9 +9,10 @@ from siftcmd import SiFT_CMD, SiFT_CMD_Error
 from siftupl import SiFT_UPL, SiFT_UPL_Error
 
 # ----------- CONFIG -------------
-# server_ip = '127.0.0.1' # localhost
-server_ip = '192.168.20.207'
-server_port = 5150
+with open('config.json', 'r') as f:
+    config = json.load(f)['client']
+server_ip = config['server_ip']
+server_port = config['server_port']
 # --------------------------------
 
 class SiFTShell(cmd.Cmd):
@@ -140,13 +141,6 @@ class SiFTShell(cmd.Cmd):
                         raise SiFT_UPL_Error(e.err_msg)
             
 
-                    # TODO: Implement the upload here
-                    # HINTS:
-                    #   - create an instance of the Upload Protocol class (SiFT_UPL)
-                    #     (pass mtp to the constructor)
-                    #   - use the created object to handle the upload operation 
-                    #   - handle potential errors as needed
-
                     print('Completed.')
 
     def do_dnl(self, arg):
@@ -177,13 +171,6 @@ class SiFTShell(cmd.Cmd):
                     except SiFT_DNL_Error as e:
                         raise SiFT_DNL_Error(e.err_msg)
 
-                    # TODO: Implement the download here
-                    # HINTS:
-                    #   - create an instance of the Download Protocol class (SiFT_DNL)
-                    #     (pass mtp to the constructor)
-                    #   - use the created object to handle the download operation 
-                    #   - handle potential errors as needed
-
                     print('Completed.')
                 else:
                     print('Canceling download...')
@@ -193,13 +180,6 @@ class SiFTShell(cmd.Cmd):
                     except SiFT_DNL_Error as e:
                         raise SiFT_DNL_Error(e.err_msg)
 
-
-                    # TODO: Implement the cancellation of the download here
-                    # HINTS:
-                    #   - create an instance of the Download Protocol class (SiFT_DNL)
-                    #     (pass mtp to the constructor)
-                    #   - use the created object to handle the cancellation of the download 
-                    #   - handle potential errors as needed
 
                     print('Completed.')
 

@@ -2,6 +2,11 @@
 
 This repository contains a Python implementation of the Simple File Transfer (SiFT) protocol, version 1.0. SiFT is a secure protocol for clients to execute remote file commands on a server over a TCP/IP network.
 
+This is the final project of AIT's Intro to Applied Cryptography Course in 2022
+
+## Authors
+Anh (Andy) Dao and Tenzin Nyema 
+
 ## About the SiFT Protocol
 
 SiFT v1.0 is designed to be a secure file transfer protocol that operates over insecure networks. It provides protection against eavesdropping, message modification, deletion, and replay attacks by using a cryptographically secured message transfer sub-protocol (MTP).
@@ -35,9 +40,19 @@ The protocol uses a login system to authenticate clients and establish shared se
 
 ## How to Run
 
-(Note: These are general instructions based on the file structure. You may need to install dependencies like `pycryptodome`.)
+### 1. Configuration
 
-### 1. Start the Server
+Before running the client or server, you can customize the settings in the `config.json` file. This file allows you to easily change the server's IP address, port, and other parameters without modifying the source code.
+
+### 2. Install Dependencies
+
+This project requires the `pycryptodome` library. You can install it using pip:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Start the Server
 
 Open a terminal and run the server:
 ```bash
@@ -52,3 +67,6 @@ Open another terminal and run the client:
 python3 client.py
 ```
 The client will prompt you for a username and password to log in to the server. Once logged in, you can use the supported SiFT commands.
+
+## Rights
+This has been uploaded to Anh Dao's Github repository with permissions from Tenzin for v1.0. Any further commits within this repo are made by Anh.

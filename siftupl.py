@@ -41,7 +41,6 @@ class SiFT_UPL:
     # uploads file at filepath in fragments to the server (to be used by the client)
     def handle_upload_client(self, filepath):
 
-        # TODO: implement this function!
         file = open(filepath, "rb")
         while True:
             file_fragment = file.read(self.size_fragment)
@@ -55,18 +54,17 @@ class SiFT_UPL:
             except SiFT_MTP_Error as e:
                 raise SiFT_UPL_Error('Unable to send command response --> ' + e.err_msg)
 
-        
         file.close()
-        msg_type, msg_payload = self.mtp.receive_msg()
-            
-        
-
+        try:
+            msg_type, msg_payload = self.mtp.receive_msg()
+            if msg_type != self.mtp.type_upload_res:
+                raise SiFT_UPL_Error('Unexpected message type received')
+        except SiFT_MTP_Error as e:
+            raise SiFT_UPL_Error('Unable to receive upload response --> ' + e.err_msg)
 
 
     # handles a file upload on the server (to be used by the server)
     def handle_upload_server(self, filepath):
-
-        # TODO: implement this function!
 
         file = open(filepath, 'wb')
         hash_fn = SHA256.new()
@@ -78,29 +76,20 @@ class SiFT_UPL:
                 file.write(msg_payload)
                 file_length += len(msg_payload)
                 hash_fn.update(msg_payload)
+                if msg_type == self.mtp.type_upload_req_1:
+                    break
             except SiFT_MTP_Error as e:
-                raise SiFT_UPL_Error('Unable to send upload response --> ' + e.err_msg)
-            if msg_type == self.mtp.type_upload_req_1:
-                file.write(msg_payload)
-                file.close()
-                break
+                raise SiFT_UPL_Error('Unable to receive upload data --> ' + e.err_msg)
 
+        file.close()
         request_hash = hash_fn.digest()
-        msg_payload = request_hash.hex()+ self.delimiter + str(file_length)
-        self.mtp.send_msg(self.mtp.type_upload_res, msg_payload.encode(self.coding))
-    
-                
-                
         
-                
-                
-    
-        
-    
+        upl_res_struct = {}
+        upl_res_struct['file_hash'] = request_hash
+        upl_res_struct['file_size'] = file_length
+        upl_res_payload = self.build_upload_res(upl_res_struct)
 
-
-
-
-
-
-
+        try:
+            self.mtp.send_msg(self.mtp.type_upload_res, upl_res_payload)
+        except SiFT_MTP_Error as e:
+            raise SiFT_UPL_Error('Unable to send upload response --> ' + e.err_msg)

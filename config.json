@@ -1,0 +1,16 @@
+{
+  "server": {
+    "ip": "127.0.0.1",
+    "port": 5150,
+    "privkeyfile": "private.pem",
+    "usersfile": "users.txt",
+    "usersfile_coding": "utf-8",
+    "usersfile_rec_delimiter": "\n",
+    "usersfile_fld_delimiter": ":",
+    "rootdir": "./users/"
+  },
+  "client": {
+    "server_ip": "127.0.0.1",
+    "server_port": 5150
+  }
+}

@@ -4,6 +4,7 @@ import sys
 import threading
 import socket
 import getpass
+import json
 from siftmtp import SiFT_MTP, SiFT_MTP_Error
 from siftlogin import SiFT_LOGIN, SiFT_LOGIN_Error
 from siftcmd import SiFT_CMD, SiFT_CMD_Error
@@ -11,15 +12,17 @@ from siftcmd import SiFT_CMD, SiFT_CMD_Error
 class Server:
     def __init__(self):
         # ------------------------ CONFIG -----------------------------
-        self.server_privkeyfile = 'privkey.pem'
-        self.server_usersfile = 'users.txt' 
-        self.server_usersfile_coding = 'utf-8'
-        self.server_usersfile_rec_delimiter = '\n'
-        self.server_usersfile_fld_delimiter = ':'
-        self.server_rootdir = './users/'
-        self.server_ip = '192.168.20.208' #socket.gethostbyname(socket.gethostname()) '
-        # self.server_ip = socket.gethostbyname('localhost')
-        self.server_port = 5150
+        with open('config.json', 'r') as f:
+            config = json.load(f)['server']
+
+        self.server_privkeyfile = config['privkeyfile']
+        self.server_usersfile = config['usersfile']
+        self.server_usersfile_coding = config['usersfile_coding']
+        self.server_usersfile_rec_delimiter = config['usersfile_rec_delimiter']
+        self.server_usersfile_fld_delimiter = config['usersfile_fld_delimiter']
+        self.server_rootdir = config['rootdir']
+        self.server_ip = config['ip']
+        self.server_port = config['port']
         # -------------------------------------------------------------
         self.server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.server_socket.bind((self.server_ip, self.server_port))
